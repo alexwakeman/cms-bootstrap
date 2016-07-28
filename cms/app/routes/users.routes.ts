@@ -6,7 +6,7 @@ import {UsersIndexComponent} from '../components/users/users.index.component';
 
 export const UsersRoutes: RouterConfig = [
     {
-        path: 'ng/users',
+        path: 'users',
         component: UsersIndexComponent,
         children: [
             {

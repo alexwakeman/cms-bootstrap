@@ -1,30 +1,41 @@
-# Angular2 Beta with Gulp, Typescript, and Express  
+# Angular2 & Express Content Management System Bootstrap  
 
-This uses SystemJS and a minimally configured gulpfile. **This app uses HTML5 location paths.
-This app isn't meant to overwhelm you with an intensely complex gulp build system.**
+The project was started to provide a common base to start any custom Content Management Platform, from previous experience in building these kind of tools. 
+It implements best practices in terms of Angular2 project structure and Node server security. Several security features are used including:
 
-If you're submitting pull requests please keep in mind that we shouldn't add features. Most examples are complete overkill for Angular2 beginners and we should just keep to the base libraries involved.
+[Helmet][1], [Express API Rate Limiter][2] and [Express Session][3]
 
-I tried to be as explicit as possible.
-I believe it to be organized well enough for you to create a more robust app.
+[1]: https://www.npmjs.com/package/helmet
+[2]: https://www.npmjs.com/package/express-rate-limit
+[3]: https://www.npmjs.com/package/express-session
 
-I have purposefully made this project as THIN on the gulp side as possible as not to overwhelm people. 
-
-It's a supplement to this article: 
-
-[http://blog.edenmsg.com/angular2-typescript-gulp-and-expressjs/](http://blog.edenmsg.com/angular2-typescript-gulp-and-expressjs/) 
+MongoDB is used for the database, and Gulp for the build tool. The UI is based around Twitter Bootstrap CSS framework.
 
 Getting Started, grab the dependencies with:
 
 `npm install`
 
-then run
+You'll need to ensure the base ES6 typings are available to Angular2 and TypeScript by running:
+
+`typings install dt~es6-shim --global --save`
+
+or just 
+
+`typings install`
+
+-----
+
+To build the app, and place all processed files and their dependencies into the `dist` folder, run:
 
 `gulp`
 
-To run the server do this:
+During development, you can use:
 
-```shell
-node dist/server.js
-```
+`gulp watch` 
 
+This will automatically re-run relevant parts of the build process whenever changes are made. This includes starting and re-starting the Node server.
+
+##Notes:
+
+- Inside `server/server.js` there is a flag called `ENABLE_AUTH` that's used to switch on session authentication. When you first run the app there are no users so you cannot login.
+Once you have successfully run the app, navigate to http://localhost:3000/cms/ and create a user account under Users. Once this is done you can then set `ENABLE_AUTH` to `true`, to log in securely. 

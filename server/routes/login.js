@@ -9,13 +9,13 @@ module.exports = function (modLib) {
 
 			modLib.db.findOneByObject('users', query, function (error, user) {
 				if (error || !user) {
-					res.status(401).send('Problem logging in');
+					res.status(401).send('Problem logging in - unknown user');
 					return;
 				}
 
 				comparePassword(input.password, user.pw, function (error, isMatch) {
 					if (error || !isMatch) {
-						res.status(401).send('Problem logging in');
+						res.status(401).send('Problem logging in - password mismatch');
 						return false;
 					}
 					else {

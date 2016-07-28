@@ -1,7 +1,19 @@
-var modLib = {}; // an object containing re-usable cross-app components
+
+/*
+ Attention: - set ENABLE_AUTH to `true` and enable session security across the web app
+ */
+const ENABLE_AUTH = false;
+/*
+	End security config
+ */
+
+var modLib = {}; // an object containing re-usable cross-app components, avoids using globals
 modLib.express = require('express');
 modLib.app = modLib.express();
-modLib.authChecker = require('./utils/auth-utils').auth;
+modLib.authChecker = require('./utils/auth-utils').auth(ENABLE_AUTH);
+/*
+	End Auth checker config
+ */
 var MongoDataAccess = require('./utils/mongo-data-access');
 modLib.db = new MongoDataAccess();
 modLib.router = modLib.express.Router();
@@ -46,7 +58,7 @@ modLib.app.use(session({ // req.session is populated
 		path: '/',
 		maxAge: new Date(Date.now() + time),
 		httpOnly: true,
-		domain: '.local'
+		domain: 'localhost'
 	}
 }));
 
@@ -55,20 +67,18 @@ modLib.app.use(bodyParser.urlencoded({extended: false}));
 modLib.app.use(bodyParser.json({limit: '50mb'}));
 
 // ROUTING
-
 // base routes
-// modLib.app.all(['/api', '/cms'], function (req, res, next) {
-// 	return req.session.auth ? next() : res.status(401).send('');
-// });
-modLib.app.use('/login', modLib.express.static(path.join(__dirname, '../dist/login/')));
-modLib.app.use('/cms', modLib.express.static(path.join(__dirname, '../dist/')));
-modLib.app.use('/cms/ng', (req, res) => res.redirect('/cms/'));
+modLib.app.use('/', modLib.express.static(path.join(__dirname, '../dist/login/')));
+modLib.app.all(['/api', '/cms'], function (req, res, next) {
+	return ENABLE_AUTH ? req.session.isAuth ? next() : res.redirect('/') : next();
+});
 
 // api routes
 var login = require('./routes/login')(modLib);
 var users = require('./routes/users')(modLib);
 modLib.app.use(login);
 modLib.app.use('/api', users);
+modLib.app.use('/cms', modLib.express.static(path.join(__dirname, '../dist/')));
 
 var server = modLib.app.listen(port, function () {
 	var port = server.address().port;

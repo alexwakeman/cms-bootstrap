@@ -1,4 +1,4 @@
-<div class="container nested-container">
+<div>
 	<div class="row">
 		<div class="col-sm-12 text-right margin-bottom">
 			<h4 class="text-center">New User</h4>
@@ -6,46 +6,57 @@
 	</div>
 	<div class="row">
 		<div class="col-sm-12">
-			<form class="form-horizontal">
+			<form [formGroup]="userForm" class="form-horizontal" (ngSubmit)="submit()" #userFormExport="ngForm">
 				<div class="form-group">
 					<label for="first-name" class="col-sm-2 control-label">First Name</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="first-name" required [(ngModel)]="user.firstName">
+						<input type="text" class="form-control" id="first-name" required formControlName="firstName">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="last-name" class="col-sm-2 control-label">Last Name</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="last-name" required [(ngModel)]="user.lastName">
+						<input type="text" class="form-control" id="last-name" required formControlName="lastName">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="email" class="col-sm-2 control-label">Email</label>
 					<div class="col-sm-10">
-						<input type="email" class="form-control" id="email" required [(ngModel)]="user.email">
+						<input type="email" class="form-control" id="email" required formControlName="email">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="organisation" class="col-sm-2 control-label">Organisation</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="organisation" required [(ngModel)]="user.organisation">
+						<input type="text" class="form-control" id="organisation" required formControlName="organisation">
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" [class.hasError]="!userFormExport.valid && userFormExport.touched">
 					<label for="password" class="col-sm-2 control-label">Password</label>
 					<div class="col-sm-10">
-						<input type="password" class="form-control" id="password" required [(ngModel)]="user.password">
+						<input type="password" class="form-control" id="password" required formControlName="password" [(ngModel)]="password">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="confirm-password" class="col-sm-2 control-label">Confirm Password</label>
 					<div class="col-sm-10">
-						<input type="password" class="form-control" id="confirm-password" required [(ngModel)]="passwordConfirm">
+						<input type="password" class="form-control" id="confirm-password" required formControlName="passwordConfirm">
 					</div>
 				</div>
 				<div class="form-group">
-					<button type="submit" class="btn btn-primary right" (click)="submit()">Submit</button>
-					<a [routerLink]="['Users']" type="submit" class="btn btn-default right margin-right">Cancel</a>
+					<div class="col-sm-10 col-sm-offset-2"
+						 *ngIf="userForm.controls['passwordConfirm'].hasError('passwordMismatch') && userForm.controls['passwordConfirm'].dirty">
+						<p class="text-danger">Passwords must match</p>
+					</div>
+					<div class="col-sm-10 col-sm-offset-2"
+						 *ngIf="(userForm.controls['password'].hasError('passwordStrength') ||
+						 userForm.controls['password'].hasError('minlength')) && userForm.controls['password'].dirty">
+						<p class="text-danger">Password must be at least eight characters in length, and contain one capital letter and one number</p>
+					</div>
+				</div>
+				<div class="form-group text-right">
+					<button type="submit" class="btn btn-primary right" [disabled]="!userFormExport.valid">Submit</button>
+					<a [routerLink]="['/users']" type="submit" class="btn btn-default right margin-right">Cancel</a>
 				</div>
 			</form>
 		</div>

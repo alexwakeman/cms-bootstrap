@@ -5,7 +5,7 @@ module.exports = function (modLib) {
 		.get(modLib.authChecker, function (req, res) {
 			res.set('Content-Type', 'application/json');
 			delete req.session.user.pw;
-			res.send(req.session.user);
+			res.send({data: req.session.user});
 		});
 
 	modLib.router.route('/users/logout')
@@ -14,13 +14,13 @@ module.exports = function (modLib) {
 				if (err) {
 					res.status(200).send('Problem logging user out.');
 				}
-				res.status(200).send('logged out');
+				res.status(200).send('Logged out');
 			});
 		});
 
-	modLib.router.route('/users/:id?')
+	modLib.router.route('/users')
 		.get(modLib.authChecker, function (req, res) {
-			var id = req.params.id;
+			var id = req.query.id;
 			if (id) {
 				modLib.db.findById('users', id, function (error, data) {
 					if (error) {
@@ -28,16 +28,18 @@ module.exports = function (modLib) {
 					}
 					res.set('Content-Type', 'application/json');
 					delete data.pw;
-					res.send(data);
+					res.send({data: data});
 				});
 			}
 			else {
 				modLib.db.findAll('users', function (error, data) {
-					if (error) {
-						res.status(500).send(error.message);
-					}
 					res.set('Content-Type', 'application/json');
-					res.send(data);
+					if (data && data.length) {
+						data.forEach((entry) => {
+							delete entry.pw;
+						})
+					}
+					res.send({data: data});
 				});
 			}
 		})
@@ -50,20 +52,21 @@ module.exports = function (modLib) {
 				}
 				input.pw = pw;
 				delete input.password; // must delete plain text version of password
-				modLib.db.addEntry('users', input);
-				res.status(200).send('');
+				delete input._id; // remove the ID part as mongo creates this
+				modLib.db.addEntry('users', input, () => res.status(200).send(''));
 			});
 		})
 		.put(modLib.authChecker, function (req, res) {
 			var input = req.body;
+			var id = req.query.id;
 			cryptPassword(input.password, function (error, pw) {
 				if (error) {
 					res.status(500).send(error.message);
 					return;
 				}
-				input.pw = pw;
 				delete input.password; // must delete plain text version of password
-				modLib.db.updateEntry('users', req.params.id, input, function (error) {
+				input.pw = pw;
+				modLib.db.updateEntry('users', id, input, function (error) {
 					if (error) {
 						res.status(500).send(error.message);
 						return;
@@ -73,7 +76,8 @@ module.exports = function (modLib) {
 			});
 		})
 		.delete(modLib.authChecker, function (req, res) {
-			modLib.db.removeEntry('users', req.params.id, function (error) {
+			var id = req.query.id;
+			modLib.db.removeEntry('users', id, function (error) {
 				if (error) {
 					res.status(500).send(error.message);
 				}

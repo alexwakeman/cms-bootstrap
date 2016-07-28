@@ -1,14 +1,17 @@
 <nav class="navbar navbar-default navbar-static-top">
 	<div class="container">
 		<div class="navbar-header">
-			QADB Admin
+			<h4 class="title">CMS Admin</h4>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li class="active"><a [routerLink]="['/home']">Home</a></li>
 				<li><a [routerLink]="['/users']">Users</a></li>
 			</ul>
+			<div class="user">
+				<p>{{user.firstName}} {{user.lastName}} <a href="javascript:void(0);" (click)="logout()">Logout</a></p>
+			</div>
 		</div>
 	</div>
 </nav>
-<router-outlet class="container"></router-outlet>
+<router-outlet></router-outlet>

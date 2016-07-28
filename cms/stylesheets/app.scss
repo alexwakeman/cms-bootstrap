@@ -7,3 +7,17 @@
 .margin-bottom {
     margin-bottom: 4px;
 }
+
+h4.title {
+    padding-top: 6px;
+    padding-right: 16px;
+}
+
+#navbar {
+    .user {
+        position: relative;
+        float: right;
+        text-align: right;
+        padding-top: 16px;
+    }
+}

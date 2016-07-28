@@ -16,20 +16,24 @@ gulp.task('clean', function () {
  JS dependencies, order is important
  */
 var jsNPMDependencies = [
-	'angular2/bundles/angular2-polyfills.js',
+	'bootstrap/dist/**/*',
 	'systemjs/dist/system.src.js',
-	'rxjs/bundles/Rx.js',
-	'angular2/bundles/angular2.dev.js',
-	'angular2/bundles/router.dev.js'
+	'zone.js/dist/zone.min.js',
+	'reflect-metadata/temp/Reflect.js'
 ];
 
-gulp.task('build:index', function () {
+gulp.task('build:libs', function () {
 	var mappedPaths = jsNPMDependencies.map(file => path.resolve('node_modules', file));
-	var copyJsNPMDependencies = gulp.src(mappedPaths, {base: 'node_modules'})
+	gulp.src(mappedPaths, {base: 'node_modules'})
 		.pipe(gulp.dest('dist/libs'));
-	var copyIndex = gulp.src('cms/index.html')
-		.pipe(gulp.dest('dist'));
-	return [copyJsNPMDependencies, copyIndex];
+	gulp.src('loader/systemjs.config.js')
+		.pipe(gulp.dest('dist/libs/loader'));
+	gulp.src('node_modules/@angular/**/bundles/*.umd.js')
+		.pipe(gulp.dest('dist/libs/@angular'));
+	gulp.src('node_modules/angular2-in-memory-web-api/*.js')
+		.pipe(gulp.dest('dist/libs/angular2-in-memory-web-api'));
+	gulp.src('node_modules/rxjs/**/*.js')
+		.pipe(gulp.dest('dist/libs/rxjs'));
 });
 
 gulp.task('build:app', function () {
@@ -46,16 +50,15 @@ gulp.task('build:app', function () {
 gulp.task('build:html', function() {
 	gulp.src('cms/**/*.html')
 		.pipe(gulp.dest('dist'));
+	gulp.src('cms/index.html')
+		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('build:login', function () {
+	gulp.src('node_modules/bootstrap/dist/**/*')
+		.pipe(gulp.dest('dist/login/bootstrap'));
 	return gulp.src('login/**/*')
 		.pipe(gulp.dest('dist/login'));
-});
-
-gulp.task('build:stylesheets', function () {
-	return gulp.src('cms/bootstrap/**/*')
-		.pipe(gulp.dest('dist/bootstrap'));
 });
 
 gulp.task('sass', function() {
@@ -82,7 +85,7 @@ gulp.task('server', function() { // starts and restarts the node server
 
 
 gulp.task('build', function (callback) {
-	runSequence('clean', 'build:index', 'build:app', 'build:login', 'build:stylesheets', 'sass', callback);
+	runSequence('clean', 'build:libs', 'build:app', 'build:html', 'build:login', 'build:stylesheets', 'sass', callback);
 });
 
 gulp.task('default', ['build']);
