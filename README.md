@@ -17,11 +17,9 @@ Getting Started, grab the dependencies with:
 
 You'll need to ensure the base ES6 typings are available to Angular2 and TypeScript by running:
 
-`typings install dt~es6-shim --global --save`
+`typings install` (you'll need [typings][4] installed globally for this to work)
 
-or just 
-
-`typings install`
+[4]: https://www.npmjs.com/package/typings
 
 -----
 
@@ -33,7 +31,9 @@ During development, you can use:
 
 `gulp watch` 
 
-This will automatically re-run relevant parts of the build process whenever changes are made. This includes starting and re-starting the Node server.
+This will start a node instance and automatically re-run relevant parts of the build process whenever changes are made. 
+
+*This includes re-starting the Node server.*
 
 ##Notes:
 
