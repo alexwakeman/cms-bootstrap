@@ -17,9 +17,7 @@ export class AppComponent {
     constructor(private usersService:UsersService) {
         this.usersService.getLoggedInUser()
             .then((user: User) => {
-                console.log(user);
                 this.user = user;
-                // console.log(this.user);
             }, () => {
                 // not logged in / unknown error
             });
