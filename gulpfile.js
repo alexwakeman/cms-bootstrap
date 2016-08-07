@@ -85,7 +85,7 @@ gulp.task('server', function() { // starts and restarts the node server
 
 
 gulp.task('build', function (callback) {
-	runSequence('clean', 'build:libs', 'build:app', 'build:html', 'build:login', 'build:stylesheets', 'sass', callback);
+	runSequence('clean', 'build:libs', 'build:app', 'build:html', 'build:login', 'sass', callback);
 });
 
 gulp.task('default', ['build']);
