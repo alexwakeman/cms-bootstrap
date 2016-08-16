@@ -1,10 +1,9 @@
-
 /*
  Attention: - set ENABLE_AUTH to `true` and enable session security across the web app
  */
 const ENABLE_AUTH = false;
 /*
-	End security config
+ End security config
  */
 
 var modLib = {}; // an object containing re-usable cross-app components, avoids using globals
@@ -12,7 +11,7 @@ modLib.express = require('express');
 modLib.app = modLib.express();
 modLib.authChecker = require('./utils/auth-utils').auth(ENABLE_AUTH);
 /*
-	End Auth checker config
+ End Auth checker config
  */
 var MongoDataAccess = require('./utils/mongo-data-access');
 modLib.db = new MongoDataAccess();
@@ -29,7 +28,7 @@ var dbAddr = 'mongodb://127.0.0.1:27017/qadb';
 // security
 // app.enable('trust proxy'); // only if you're behind a reverse proxy
 var apiLimiter = new RateLimit({
-	windowMs: 15*60*1000, // 15 minutes
+	windowMs: 15 * 60 * 1000, // 15 minutes
 	max: 100,
 	delayMs: 0 // disabled
 });
