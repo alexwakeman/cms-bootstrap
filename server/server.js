@@ -69,7 +69,7 @@ modLib.app.use(bodyParser.json({limit: '50mb'}));
 // ROUTING
 // base routes
 modLib.app.use('/', modLib.express.static(path.join(__dirname, '../dist/login/')));
-modLib.app.all(['/api', '/cms'], function (req, res, next) {
+modLib.app.all('/cms', function (req, res, next) {
 	return ENABLE_AUTH ? req.session.isAuth ? next() : res.redirect('/') : next();
 });
 
