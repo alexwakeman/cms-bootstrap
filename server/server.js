@@ -78,7 +78,7 @@ var login = require('./routes/login')(modLib);
 var users = require('./routes/users')(modLib);
 modLib.app.use(login);
 modLib.app.use('/api', users);
-modLib.app.use('/cms', modLib.express.static(path.join(__dirname, '../dist/')));
+modLib.app.use('/cms', modLib.express.static(path.join(__dirname, '../dist/cms/')));
 
 var server = modLib.app.listen(port, function () {
 	var port = server.address().port;

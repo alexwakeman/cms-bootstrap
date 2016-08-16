@@ -24,6 +24,8 @@ module.exports = function (modLib) {
 							req.socket.remoteAddress ||
 							req.connection.socket.remoteAddress || '';
 						ip = ip.split(', ')[0];
+
+						delete user.pw;
 						// log the user in with a session
 						req.session.ip = ip;
 						req.session.isAuth = true;

@@ -3,9 +3,7 @@ var cryptPassword = require('../utils/crypto-utils').cryptPassword;
 module.exports = function (modLib) {
 	modLib.router.route('/users/current')
 		.get(modLib.authChecker, function (req, res) {
-			res.set('Content-Type', 'application/json');
-			delete req.session.user.pw;
-			res.send({data: req.session.user});
+			res.json({data: req.session.user});
 		});
 
 	modLib.router.route('/users/logout')
@@ -26,20 +24,18 @@ module.exports = function (modLib) {
 					if (error) {
 						res.status(500).send(error.message);
 					}
-					res.set('Content-Type', 'application/json');
 					delete data.pw;
-					res.send({data: data});
+					res.json({data: data});
 				});
 			}
 			else {
 				modLib.db.findAll('users', function (error, data) {
-					res.set('Content-Type', 'application/json');
 					if (data && data.length) {
 						data.forEach((entry) => {
 							delete entry.pw;
-						})
+						});
 					}
-					res.send({data: data});
+					res.json({data: data});
 				});
 			}
 		})
@@ -87,4 +83,3 @@ module.exports = function (modLib) {
 
 	return modLib.router;
 };
-
