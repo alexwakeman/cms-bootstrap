@@ -72,13 +72,13 @@ modLib.app.use('/', modLib.express.static(path.join(__dirname, '../dist/login/')
 modLib.app.all('/cms', function (req, res, next) {
 	return ENABLE_AUTH ? req.session.isAuth ? next() : res.redirect('/') : next();
 });
+modLib.app.use('/cms', modLib.express.static(path.join(__dirname, '../dist/cms/')));
 
 // api routes
 var login = require('./routes/login')(modLib);
 var users = require('./routes/users')(modLib);
 modLib.app.use(login);
 modLib.app.use('/api', users);
-modLib.app.use('/cms', modLib.express.static(path.join(__dirname, '../dist/cms/')));
 
 var server = modLib.app.listen(port, function () {
 	var port = server.address().port;
