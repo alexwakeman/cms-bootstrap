@@ -207,7 +207,6 @@ MongoDataAccess.prototype = (function () {
 					callback(error);
 					return;
 				}
-				console.log(whereObj);
 				collection.find(whereObj).limit(1).next(function (error, doc) {
 					if (error) console.error(error);
 					callback(error, doc);

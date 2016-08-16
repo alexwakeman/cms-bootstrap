@@ -13,20 +13,21 @@ import {UsersService} from '../../services/users.service';
 })
 export class AppComponent {
     user:User = new User();
-    
+
     constructor(private usersService:UsersService) {
         this.usersService.getLoggedInUser()
             .then((user: User) => {
                 this.user = user;
             }, () => {
-                // not logged in / unknown error
+                // not logged in
+                console.warn('No current user found! PLease create a user profile and log in.')
             });
     }
 
     logout() {
         this.usersService.logout()
             .then(() => {
-                window.location.href = '/';
-            })
+                window.location.href = '/login';
+            });
     }
 }
