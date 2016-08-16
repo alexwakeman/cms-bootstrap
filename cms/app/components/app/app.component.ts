@@ -20,7 +20,7 @@ export class AppComponent {
                 this.user = user;
             }, () => {
                 // not logged in
-                console.warn('No current user found! PLease create a user profile and log in.')
+                console.warn('No current user found! Please create a user profile and log in.')
             });
     }
 
